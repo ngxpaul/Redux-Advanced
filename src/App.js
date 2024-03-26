@@ -15,9 +15,16 @@ function App() {
   const notification = useSelector((state) => state.ui.notification);
   useEffect(() => {
     const sendCartData = async () => {
+      dispatch(
+        uiActions.showNotification({
+          status: "pending",
+          title: "Sending...",
+          message: "Sending cart data!",
+        })
+      )
       //remember that create firebase database in "test mode" to allow read and write
       const response = await fetch(
-        "https://react-cdec5-default-rtdb.firebaseio.com/cart.json",
+        "https://react-cdec5-default-rtdb.firebaseio.com/cart.jsons",
         {
           method: "PUT",
           body: JSON.stringify(cart),
@@ -27,7 +34,7 @@ function App() {
         throw new Error("Seding cart data failed");
       }
       //PUT >< POST -> PUT : new data will not be added in a list of data -> it will override the existing data
-      const responseData = await response.json();
+      // const responseData = await response.json();
       dispatch(
         uiActions.showNotification({
           status: "success",
@@ -44,7 +51,7 @@ function App() {
     sendCartData().catch((error) => {
       dispatch(
         uiActions.showNotification({
-          status: "Error",
+          status: "error",
           title: "Error...",
           message: "Sending cart data failed!",
         })
